@@ -17,8 +17,8 @@ export const addMessageToStore = (state, payload) => {
       return {
         ...convo,
         messages: [
-          message,
-          ...convo.messages
+          ...convo.messages,
+          message
         ]
       };
     } else {
