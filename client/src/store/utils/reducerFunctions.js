@@ -72,12 +72,19 @@ export const addSearchedUsersToStore = (state, users) => {
 };
 
 export const addNewConvoToStore = (state, recipientId, message) => {
+  console.log(message.conversationId);
   return state.map((convo) => {
     if (convo.otherUser.id === recipientId) {
       convo.id = message.conversationId;
-      convo.messages.push(message);
       convo.latestMessageText = message.text;
-      return convo;
+
+      return {
+        ...convo,
+        messages: [
+          ...convo.messages,
+          message
+        ]
+      };
     } else {
       return convo;
     }
