@@ -20,7 +20,7 @@ const Messages = (props) => {
   useEffect(() => {
     setLastReadMessage((messages && messages.filter(message => {
       return message.readReceipt === true && message.senderId === userId;
-    }).pop()) || {});
+    }).slice(-1)) || {});
   }, [messages]);
 
   return (

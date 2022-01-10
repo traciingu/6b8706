@@ -33,7 +33,7 @@ export const updateMessagesInStore = (state, payload) => {
   if (messages && messages.length > 0) {
     return state.map((convo) => {
       if (convo.id === messages[0].conversationId && JSON.stringify(messages).localeCompare(JSON.stringify(convo.messages)) !== 0) {
-        convo.latestMessageText = messages.at(-1).text;
+        convo.latestMessageText = messages.slice(-1).text;
         return {
           ...convo,
           messages: [
