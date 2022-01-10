@@ -27,7 +27,10 @@ const Chat = (props) => {
   const classes = useStyles();
   const { conversation } = props;
   const { otherUser } = conversation;
-  const unreadMessages = conversation.messages.filter((message) => message.readReceipt === false && message.senderId === otherUser.id) || [];
+  const unreadMessages = (conversation.messages && 
+    conversation.messages.filter((message) => {
+      return message.readReceipt === false && message.senderId === otherUser.id;
+    })) || [];
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);

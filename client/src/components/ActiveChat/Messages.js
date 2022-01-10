@@ -18,9 +18,9 @@ const Messages = (props) => {
   const [lastReadMessage, setLastReadMessage] = useState({});
 
   useEffect(() => {
-    setLastReadMessage(messages.filter(message => {
+    setLastReadMessage((messages && messages.filter(message => {
       return message.readReceipt === true && message.senderId === userId;
-    }).at(-1) || {});
+    }).at(-1)) || {});
   }, [messages]);
 
   return (
