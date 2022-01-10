@@ -27,6 +27,29 @@ export const addMessageToStore = (state, payload) => {
   });
 };
 
+export const updateMessagesInStore = (state, payload) => {
+  const { messages } = payload;
+
+  if (messages && messages.length > 0) {
+    return state.map((convo) => {
+      if (convo.id === messages[0].conversationId && JSON.stringify(messages).localeCompare(JSON.stringify(convo.messages)) !== 0) {
+        convo.latestMessageText = messages.at(-1).text;
+        return {
+          ...convo,
+          messages: [
+            ...messages
+          ]
+        };
+      }
+      else {
+        return convo;
+      }
+    });
+  }
+
+  return state;
+};
+
 export const addOnlineUserToStore = (state, id) => {
   return state.map((convo) => {
     if (convo.otherUser.id === id) {
