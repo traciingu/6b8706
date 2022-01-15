@@ -33,7 +33,7 @@ router.post("/", async (req, res, next) => {
         sender.online = true;
       }
     }
-    
+
     const message = await Message.create({
       senderId,
       text,
@@ -55,7 +55,13 @@ router.patch("/:conversationId", async (req, res, next) => {
     }
 
     const { recipientId } = req.body;
+    const userId = req.user.id;
     const conversationId = req.params.conversationId;
+    const conversation = await Conversation.findConversation(userId, recipientId);
+
+    if (!conversation) {
+      return res.sendStatus(401);
+    }
 
     await Message.update(
       { readReceipt: true }, {
