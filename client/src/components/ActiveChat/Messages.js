@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Avatar, Box, makeStyles } from "@material-ui/core";
 import { SenderBubble, OtherUserBubble } from "../ActiveChat";
 import moment from "moment";
@@ -14,14 +14,7 @@ const useStyles = makeStyles(() => ({
 
 const Messages = (props) => {
   const classes = useStyles();
-  const { messages, otherUser, userId } = props;
-  const [lastReadMessage, setLastReadMessage] = useState({});
-
-  useEffect(() => {
-    setLastReadMessage((messages && messages.filter(message => {
-      return message.readReceipt === true && message.senderId === userId;
-    }).slice(-1)[0]) || {});
-  }, [messages]);
+  const { messages, otherUser, userId, lastReadMessage } = props;
 
   return (
     <Box>
@@ -31,7 +24,8 @@ const Messages = (props) => {
         return (message.senderId === userId ? (
           <>
             <SenderBubble key={message.id} text={message.text} time={time} />
-            {lastReadMessage.id === message.id ? <Avatar className={classes.readIcon} src={otherUser.photoUrl} alt="Read icon of other user's avatar"></Avatar> : ''}
+            {lastReadMessage?.id === message.id && 
+            <Avatar className={classes.readIcon} src={otherUser.photoUrl} alt="Read icon of other user's avatar"/>}
           </>
         ) : (
           <OtherUserBubble key={message.id} text={message.text} time={time} otherUser={otherUser} />

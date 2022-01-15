@@ -26,13 +26,11 @@ const ActiveChat = (props) => {
   const { user, readMessages } = props;
   const conversation = props.conversation || {};
 
-
-
   useEffect(() => {
     (async () => {
       await readMessages(conversation);
     })();
-  }, [conversation]);
+  }, [readMessages, conversation]);
 
 
   return (
@@ -48,6 +46,7 @@ const ActiveChat = (props) => {
               messages={conversation.messages}
               otherUser={conversation.otherUser}
               userId={user.id}
+              lastReadMessage={conversation.lastReadMessage}
             />
             <Input
               otherUser={conversation.otherUser}
