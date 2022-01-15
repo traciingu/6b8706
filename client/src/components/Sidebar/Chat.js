@@ -26,11 +26,7 @@ const useStyles = makeStyles((theme) => ({
 const Chat = (props) => {
   const classes = useStyles();
   const { conversation } = props;
-  const { otherUser } = conversation;
-  const unreadMessages = (conversation.messages && 
-    conversation.messages.filter((message) => {
-      return message.readReceipt === false && message.senderId === otherUser.id;
-    })) || [];
+  const { otherUser, unreadMessages } = conversation;
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
@@ -45,7 +41,7 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} />
-      <Badge badgeContent={unreadMessages.length} color="primary" className={classes.badge}></Badge>
+      <Badge badgeContent={unreadMessages?.length || 0} color="primary" className={classes.badge}/>
     </Box>
   );
 };
