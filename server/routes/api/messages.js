@@ -66,15 +66,13 @@ router.patch("/:conversationId", async (req, res, next) => {
     await Message.update(
       { readReceipt: true }, {
       where: {
-        [Op.and]: [
-          { senderId: recipientId },
-          { conversationId: conversationId },
-          { readReceipt: false }
-        ]
+        senderId: recipientId,
+        conversationId: conversationId,
+        readReceipt: false
       }
     });
 
-    const updatedMessages = await Message.findAll({
+    const messages = await Message.findAll({
       where: {
         conversationId: conversationId
       },
@@ -82,6 +80,12 @@ router.patch("/:conversationId", async (req, res, next) => {
         ['createdAt', 'ASC']
       ]
     });
+
+    const updatedMessages = {
+      messages,
+      otherUserId: recipientId,
+      userId: userId
+    };
 
     res.json(updatedMessages);
 

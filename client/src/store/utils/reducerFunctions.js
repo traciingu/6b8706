@@ -2,11 +2,14 @@ export const addMessageToStore = (state, payload) => {
   const { message, sender } = payload;
   // if sender isn't null, that means the message needs to be put in a brand new convo
   if (sender !== null) {
-    const newConvo = {
+    let newConvo = {
       id: message.conversationId,
       otherUser: sender,
       messages: [message],
+      ...(message.senderId === sender.id &&
+        { unreadMessages: [message] })
     };
+
     newConvo.latestMessageText = message.text;
     return [newConvo, ...state];
   }
@@ -19,7 +22,14 @@ export const addMessageToStore = (state, payload) => {
         messages: [
           ...convo.messages,
           message
-        ]
+        ],
+        ...(message.senderId === convo.otherUser.id &&
+        {
+          unreadMessages: [
+            ...convo.unreadMessages,
+            message
+          ]
+        })
       };
     } else {
       return convo;
@@ -28,14 +38,19 @@ export const addMessageToStore = (state, payload) => {
 };
 
 export const updateMessagesInStore = (state, payload) => {
-  const { messages } = payload;
+  const { messages,otherUserId, userId } = payload;
 
   if (messages && messages.length > 0) {
     return state.map((convo) => {
-      if (convo.id === messages[0].conversationId && JSON.stringify(messages).localeCompare(JSON.stringify(convo.messages)) !== 0) {
-        convo.latestMessageText = messages.slice(-1)[0].text;
+      if (convo.id === messages[0].conversationId && messages.slice(-1)[0].readReceipt !== convo.messages.slice(-1)[0].readReceipt) {
+        convo.lastReadMessage = messages.filter(message => message.readReceipt === true && message.senderId === userId).slice(-1)[0];
+        const unreadMessages = messages.filter(message => message.readReceipt === false && message.senderId === otherUserId);
+
         return {
           ...convo,
+          unreadMessages: [
+            ...unreadMessages
+          ],
           messages: [
             ...messages
           ]

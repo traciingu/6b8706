@@ -95,7 +95,7 @@ const sendMessage = (data, body) => {
 export const readMessages = (body) => async (dispatch) => {
   if (Object.keys(body).length > 0 && body.id) {
     const { data } = await axios.patch(`/api/messages/${body.id}`, { recipientId: body.otherUser.id });
-    dispatch(updateMessages(data));
+    dispatch(updateMessages(data.messages, data.otherUserId, data.userId));
   }
 };
 
