@@ -60,7 +60,7 @@ router.patch("/:conversationId", async (req, res, next) => {
     const conversation = await Conversation.findConversation(userId, recipientId);
 
     if (!conversation) {
-      return res.sendStatus(401);
+      return res.sendStatus(403);
     }
 
     await Message.update(
