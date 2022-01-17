@@ -5,6 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  updateMessages,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -89,6 +90,20 @@ const sendMessage = (data, body) => {
     recipientId: body.recipientId,
     sender: data.sender,
   });
+};
+
+export const readMessages = (body) => async (dispatch) => {
+  if (Object.keys(body).length > 0 && body.id) {
+    const { data } = await axios.patch(`/api/messages/${body.id}`, { recipientId: body.otherUser.id });
+    dispatch(updateMessages(data.messages, data.otherUserId, data.userId));
+
+    // Current user will be the "other user" when emitting to other sockets
+    socket.emit("update-message", {
+      messages: data.messages,
+      otherUserId: data.userId,
+      userId: data.otherUserId
+    });
+  }
 };
 
 // message format to send: {recipientId, text, conversationId}
