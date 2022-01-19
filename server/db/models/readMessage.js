@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 const db = require("../db");
 
 const ReadMessage = db.define("readMessage", {
-  readReceipt: {
+  isRead: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
     defaultValue: false,

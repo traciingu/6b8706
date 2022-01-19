@@ -1,5 +1,5 @@
 const db = require("../db");
-const Participant = require("./participant");
+const ConversationUser = require("./conversationUser");
 const Conversation = db.define("conversation", {});
 
 // find conversation given two user Ids
@@ -7,7 +7,7 @@ const Conversation = db.define("conversation", {});
 Conversation.findConversation = async function (userIds) {
   const uniqueUserIds = [...new Set(userIds)];
 
-  const conversations = await Participant.findAll({
+  const conversations = await ConversationUser.findAll({
     attributes: [
       'conversationId',
       [Sequelize.fn('array_agg', Sequelize.col('userId')), 'userIds']
